@@ -10,6 +10,6 @@ RATINGS_FILE = './Data/ratings.csv'
 
 # LSH parameters
 BLOCK_SIZE = 2   # ~ r
-NUM_BLOCKS = 256  # ~ p
-NUM_HASH_FUNCTIONS = 512 # ~ K
+NUM_BLOCKS = 10  # ~ p
+NUM_HASH_FUNCTIONS = 20 # ~ K
 NUM_NEAREST_NEIGHBORS = 4 # ~ nn

@@ -1,12 +1,11 @@
 # MIN HASH, TRA VE LIST GOM CAC PHAN TU LA 
 
 from __future__ import division
-# import os
 import re
 import random
 import time
 import operator
-from load_data import Database
+# from load_data import Database
 
 class LSH():
 	def __init__(self, K, p, r, nn, items):
@@ -91,6 +90,11 @@ class LSH():
 			if len(self.cluster[key]) == 0:
 				self.cluster.pop(key, None)
 
+	def find_all_similarity(self):
+		for i in xrange(self.num_items):
+			self.find_similarity_items(i)
+		return self.similarity
+
 	# def similarity_calc(self):
 	# 	for i in xrange(self.num_items):
 	# 		nn_tmp = {}
@@ -108,29 +112,26 @@ class LSH():
 	# 		self.similarity.append(list_tmp)
 
 # test:
-# model_base = Database()
-# model_base.load_data_from_ratings_file()
+if __name__ == '__main__':	
+	model_base = Database()
+	model_base.load_data_from_ratings_file()
+	model_lsh = LSH(256, 128, 2,10, model_base.set_of_user)
+	model_lsh.pick_family_MIH_functions()
+	for item_id in xrange(10):
+		model_lsh.locality_senstive_hashing(item_id)
+	for item_id in xrange(10):
+		print item_id
+		model_lsh.remove_item_from_clusters(item_id)
+	print model_lsh.cluster
+	model_lsh.find_similarity_items(99)
+	print model_lsh.similarity[99]
+	model_lsh.similarity_calc()
+	for i in model_lsh.hash[1]:
+		print i, len(model_lsh.cluster[i])
 
-# model_lsh = LSH(256, 128, 2,10, model_base.set_of_user)
-# model_lsh.pick_family_MIH_functions()
-# for item_id in xrange(10):
-# 	model_lsh.locality_senstive_hashing(item_id)
-# for item_id in xrange(10):
-# 	print item_id
-# 	model_lsh.remove_item_from_clusters(item_id)
+	for i in model_lsh.hash:
+		print len(model_lsh.hash[i])
 
-# print model_lsh.cluster
-
-# model_lsh.find_similarity_items(99)
-# print model_lsh.similarity[99]
-
-# model_lsh.similarity_calc()
-# for i in model_lsh.hash[1]:
-# 	print i, len(model_lsh.cluster[i])
-
-# for i in model_lsh.hash:
-# 	print len(model_lsh.hash[i])
-
-# for i in model_lsh.similarity:
-# 	print len(i)
-# print model_lsh.similarity
+	for i in model_lsh.similarity:
+		print len(i)
+		print model_lsh.similarity

@@ -2,6 +2,8 @@
 from load_data import Database
 from lsh import LSH
 import config
+import metrics
+import time
 
 model_base = Database()
 model_lsh = LSH(config.NUM_HASH_FUNCTIONS, config.NUM_BLOCKS, config.BLOCK_SIZE, \
@@ -10,7 +12,8 @@ def create_clusters():
 	model_base.load_data_from_ratings_file()
 	model_base.load_data_from_books_file()
 	model_lsh.pick_family_MIH_functions()
-	for item_id in xrange(100):
+	model_base.num_items = 10000
+	for item_id in xrange(model_base.num_items):
 		model_lsh.locality_senstive_hashing(item_id)
 
 def get_recommended_books(item_id):
@@ -62,6 +65,11 @@ def get_items_id_list():
 
 def main():
 	print "\n ****HE THONG GOI Y SACH**** \n" + "="*35 + '\n\n'
+	t = time.time()
+	create_clusters()
+	elapsed = (time.time() - t)
+	print "\nCreate clusters took %.2fsec" % elapsed
+	del t, elapsed
 	while True:
 		print "Nhap tuy chon: \n"
 		print "1. Goi y sach"
@@ -69,7 +77,8 @@ def main():
 		print "3. Cap nhat cac user thich sach"
 		print "4. Top 10 quyen sach duoc danh gia cao nhat"
 		print "5. Top 10 quyen sach pho bien chon nhat"
-		print "6. Ket thuc chuong trinh"
+		print "6. Thong ke chuong trinh"
+		print "7. Ket thuc chuong trinh"
 		ch = raw_input()
 		if ch == '1':
 			print "\n ****Goi y sach**** \n" + "="*35 + '\n'
@@ -115,9 +124,22 @@ def main():
 				print i[0]
 
 		elif ch == '6':
+			print "\n ****Thong ke chuong trinh**** \n" + "="*35 + '\n'
+			t = time.time()
+			model_lsh.find_all_similarity()
+			elapsed = (time.time() - t)
+			print "\nFind nearest neighbor using LSH took %.2fsec" % elapsed
+			del t, elapsed
+			true = metrics.jaccard_calc(model_base.num_items, model_base.set_of_user)
+			print model_lsh.similarity[0]
+			print true[0]
+			print metrics.accuracy_calc(model_lsh.similarity, true, model_base.num_items)
+
+		elif ch == '7':
 			break
 		else:
 			print "Nhap sai, vui long nhap lai"
 
-create_clusters()
-main()
+
+if __name__ == '__main__':	
+	main()

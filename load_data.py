@@ -1,10 +1,8 @@
 #LOAD_DATA
 
 import pandas as pd
-import numpy as np
-import os
+# import os
 import config
-# from collections import OrderedDict
 
 class Database():
 	def __init__(self):
@@ -63,8 +61,6 @@ class Database():
 	def find_name_of_book(self, string):
 		matching = [x for x in xrange(self.num_items) if string in self.book_titles_list[x].lower()]
 		return matching
-
-	# def find_id_of_item():
 
 	def add_item(self):
 		self.num_items += 1
