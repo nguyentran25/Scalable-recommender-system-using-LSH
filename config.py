@@ -1,7 +1,5 @@
 """
 config.py
-Daniel Goldbach
-2013 November
 
 Constants, filenames, directories, etc.
 """
